@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class RMSNorm(nn.Module):
+class RMSNorm(nn.Module): # LLM generated, placeholder
     def __init__(self, dim, eps = 1e-6):
         super().__init__()
         self.eps = eps
@@ -14,7 +14,7 @@ class RMSNorm(nn.Module):
         norm = x.pow(2).mean(dim=-1, keepdim=True).add(self.eps).rsqrt()
         return self.weight * x * norm
 
-class RotaryEmbedding(nn.Module):
+class RotaryEmbedding(nn.Module): # LLM generated, placeholder
     freqs_cos: torch.Tensor
     freqs_sin: torch.Tensor
 
@@ -33,7 +33,7 @@ class RotaryEmbedding(nn.Module):
         return cos, sin
 
 
-def apply_rope(x, cos, sin):
+def apply_rope(x, cos, sin): # LLM generated, placeholder
     cos = cos[None, None, :, :].to(dtype=x.dtype)
     sin = sin[None, None, :, :].to(dtype=x.dtype)
     half = x.shape[-1] // 2
