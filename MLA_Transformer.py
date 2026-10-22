@@ -4,9 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class RMSNorm(nn.Module):
-    def __init__(self, dim: int, eps: float = 1e-6):
+    def __init__(self, dim, eps = 1e-6):
         super().__init__()
         self.eps = eps
         self.weight = nn.Parameter(torch.ones(dim))
@@ -15,12 +14,11 @@ class RMSNorm(nn.Module):
         norm = x.pow(2).mean(dim=-1, keepdim=True).add(self.eps).rsqrt()
         return self.weight * x * norm
 
-
 class RotaryEmbedding(nn.Module):
     freqs_cos: torch.Tensor
     freqs_sin: torch.Tensor
 
-    def __init__(self, dim: int, max_seq_len: int, base: float = 10000.0):
+    def __init__(self, dim, max_seq_len, base = 10000.0):
         super().__init__()
         inv_freq = 1.0 / (base ** (torch.arange(0, dim, 2, dtype=torch.float32) / dim))
         positions = torch.arange(max_seq_len, dtype=torch.float32)
@@ -35,7 +33,7 @@ class RotaryEmbedding(nn.Module):
         return cos, sin
 
 
-def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
+def apply_rope(x, cos, sin):
     cos = cos[None, None, :, :].to(dtype=x.dtype)
     sin = sin[None, None, :, :].to(dtype=x.dtype)
     half = x.shape[-1] // 2
