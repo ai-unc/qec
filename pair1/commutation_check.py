@@ -1,5 +1,4 @@
 import numpy as np
-from pauli_to_bin import pauli_to_bin
 
 # takes two np arrays of length 2n
 # returns 0 if A, B commute, returns 1 if they anticommute
