@@ -1,0 +1,641 @@
+{
+  "archive": [
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 687
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 696
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              2
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 697
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 759
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 804
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 825
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              3
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 888
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 706
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              2
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 858
+    },
+    {
+      "candidate": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              3,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "evaluation": {
+        "diagnostics": {
+          "gate_edit_distance": 1
+        },
+        "value": -1.0
+      },
+      "evaluation_index": 975
+    }
+  ],
+  "best": {
+    "candidate": {
+      "gates": [
+        {
+          "op": "H",
+          "qubits": [
+            0
+          ]
+        },
+        {
+          "op": "CNOT",
+          "qubits": [
+            0,
+            1
+          ]
+        },
+        {
+          "op": "S",
+          "qubits": [
+            1
+          ]
+        },
+        {
+          "op": "H",
+          "qubits": [
+            1
+          ]
+        },
+        {
+          "op": "S",
+          "qubits": [
+            0
+          ]
+        }
+      ],
+      "k_logical": 2,
+      "n_qubits": 4,
+      "schema_version": 1
+    },
+    "evaluation": {
+      "diagnostics": {
+        "gate_edit_distance": 1
+      },
+      "value": -1.0
+    },
+    "evaluation_index": 687
+  },
+  "error": null,
+  "evaluation_count": 1000,
+  "method": "one_plus_one",
+  "objective": {
+    "direction": "maximize",
+    "exact": true,
+    "is_synthetic": true,
+    "metric_name": "demo.negative_gate_edit_distance",
+    "parameters": {
+      "target": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              1,
+              0
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "warning": "SYNTHETIC; no quantum-performance meaning"
+    },
+    "version": "1"
+  },
+  "schema_version": 1,
+  "status": "completed",
+  "timing": {
+    "elapsed_seconds": 0.03822093100006896
+  }
+}

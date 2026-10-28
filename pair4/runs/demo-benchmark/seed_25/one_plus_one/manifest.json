@@ -1,0 +1,96 @@
+{
+  "config": {
+    "budget": 1000,
+    "cache_enabled": false,
+    "neutral_acceptance_probability": 0.5,
+    "ranking": [
+      "primary_objective",
+      "fewer_CNOTs",
+      "fewer_total_gates"
+    ],
+    "rng": "python.random.Random/MT19937",
+    "sampling": {
+      "connectivity": "all_to_all_directed",
+      "gate_order": "chronological",
+      "gate_probabilities": {
+        "CNOT": 0.3333333333333333,
+        "H": 0.3333333333333333,
+        "S": 0.3333333333333333
+      },
+      "input_convention": "ancillas_first_logical_inputs_last",
+      "k_logical": 2,
+      "length_distribution": "uniform_integer_0_to_max_inclusive",
+      "max_length": 32,
+      "n_qubits": 4
+    },
+    "seed": 25,
+    "stream_derivation": "sha256(pair4:v1:<seed>:<label>)",
+    "stream_labels": [
+      "initial",
+      "proposals",
+      "mutation",
+      "acceptance"
+    ]
+  },
+  "environment": {
+    "pair4_schema": 1,
+    "python": "3.12.3"
+  },
+  "method": "one_plus_one",
+  "objective": {
+    "direction": "maximize",
+    "exact": true,
+    "is_synthetic": true,
+    "metric_name": "demo.negative_gate_edit_distance",
+    "parameters": {
+      "target": {
+        "gates": [
+          {
+            "op": "H",
+            "qubits": [
+              0
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              0,
+              1
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "H",
+            "qubits": [
+              1
+            ]
+          },
+          {
+            "op": "CNOT",
+            "qubits": [
+              1,
+              0
+            ]
+          },
+          {
+            "op": "S",
+            "qubits": [
+              0
+            ]
+          }
+        ],
+        "k_logical": 2,
+        "n_qubits": 4,
+        "schema_version": 1
+      },
+      "warning": "SYNTHETIC; no quantum-performance meaning"
+    },
+    "version": "1"
+  },
+  "schema_version": 1
+}

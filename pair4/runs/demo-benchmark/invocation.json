@@ -1,0 +1,8 @@
+{
+  "evaluator": "demo",
+  "evaluator_config": {
+    "k_logical": 2,
+    "n_qubits": 4
+  },
+  "schema_version": 1
+}
