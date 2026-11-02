@@ -9,7 +9,7 @@ def group_member(error, group):
     error = pauli_to_bin(error)
 
     # add the error to the group
-    test_group = group.append(error)
+    test_group = group + [error]
 
     # if the group is no longer independent after adding the vector, then error belongs to group
     return not gen_ind(test_group)
