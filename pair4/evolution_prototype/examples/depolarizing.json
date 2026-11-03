@@ -1,0 +1,10 @@
+{
+  "metric_name": "harmful_undetected_probability",
+  "noise": {
+    "model": "depolarizing",
+    "p": 0.01,
+    "placement": "post_encoding_data"
+  },
+  "syndrome_information": "ideal",
+  "evaluation": "exact_full_enumeration"
+}
