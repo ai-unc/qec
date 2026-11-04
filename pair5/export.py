@@ -1,12 +1,10 @@
-"""Thin handoff helpers: Pair 5 CircuitCandidates → formats other pairs consume."""
-
 from __future__ import annotations
 
 from pair4.evolution_prototype import CircuitCandidate
 
 
 def candidate_to_pair2_circuit(candidate: CircuitCandidate) -> list[tuple]:
-    """Convert GateOps to Pair 2 tuples: ("H", q) / ("S", q) / ("CNOT", c, t)."""
+    # Formats output: (CNOT, c, t) / (H, q) / (S, q)
     circuit = []
     for gate in candidate.gates:
         if gate.op == "CNOT":

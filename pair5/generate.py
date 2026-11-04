@@ -18,15 +18,8 @@ def _masked_sample(logits: torch.Tensor, allow: torch.Tensor, greedy: bool) -> i
 
 
 @torch.no_grad()
-def generate_circuit(
-    model: CliffordDecoderOnly,
-    *,
-    max_gates: int | None = None,
-    greedy: bool = True,
-    device: torch.device | None = None,
-) -> CircuitCandidate:
-    """Generate one CircuitCandidate from BOS until EOS or max_gates."""
-    tokenizer: CliffordTokenizer = model.tokenizer
+def generate_circuit(model: CliffordDecoderOnly, *, max_gates: int | None = None, greedy: bool = True, device: torch.device | None = None) -> CircuitCandidate:
+    tokenizer = model.tokenizer
     model.eval()
     if device is None:
         device = next(model.parameters()).device
