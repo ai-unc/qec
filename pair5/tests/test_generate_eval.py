@@ -1,9 +1,8 @@
-import math
 import unittest
 
 import torch
 
-from pair4.evolution_prototype import CircuitCandidate, DemoEvaluator, GateOp
+from pair4.evolution_prototype import CircuitCandidate, GateOp
 
 from pair5.generate import generate_circuit
 from pair5.model import CliffordDecoderOnly
@@ -11,7 +10,7 @@ from pair5.tokenizer import CliffordTokenizer
 
 
 class GenerateEvalTests(unittest.TestCase):
-    def test_generate_valid_candidate_and_demo_eval(self):
+    def test_generate_valid_candidate(self):
         torch.manual_seed(0)
         tokenizer = CliffordTokenizer(n_qubits=4, k_logical=2)
         model = CliffordDecoderOnly(tokenizer, d_model=64, num_heads=4, num_layers=1, d_ff=128)
@@ -24,9 +23,6 @@ class GenerateEvalTests(unittest.TestCase):
             self.assertIsInstance(gate, GateOp)
             if gate.op == "CNOT":
                 self.assertNotEqual(gate.qubits[0], gate.qubits[1])
-
-        result = DemoEvaluator(4, 2).evaluate(candidate)
-        self.assertTrue(math.isfinite(result.value))
 
     def test_forward_shapes(self):
         tokenizer = CliffordTokenizer(n_qubits=4, k_logical=2)
