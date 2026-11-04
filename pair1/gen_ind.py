@@ -53,4 +53,4 @@ def gen_ind(generators):
 
     # zero row check, only need to check last entry in remaining row
     last = next(iter(remaining))
-    return mat[last][-1] != 0
+    return bool(mat[last].any())
