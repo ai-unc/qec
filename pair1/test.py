@@ -46,6 +46,6 @@ def test_inputs_commute():
     assert commutation_check(pauli_to_bin("IXIX"), pauli_to_bin("XIXI")) == 0
 
 def test_inputs_anticommute():
-    assert commutation_check(pauli_to_bin("XIX"), pauli_to_bin("XIZ")) == 1
+    assert commutation_check(pauli_to_bin("XIX"), pauli_to_bin("XIZ")) == 1 
 
 
