@@ -10,15 +10,9 @@ from .tokenizer import CliffordTokenizer
 class FactoredGateEmbedding(nn.Module):
     def __init__(self, tokenizer: CliffordTokenizer, d_model: int):
         super().__init__()
-        # Gate embedding, named op bc that's what group 4 called it
-        self.emb_op = nn.Embedding(tokenizer.OP_VOCAB_SIZE, d_model, padding_idx=tokenizer.PAD) 
-        # Qubit embedding, named qubit 1 and qubit 2 as qa and qb bc that's what group 4 called it
-        self.emb_qa = nn.Embedding(
-            tokenizer.qubit_vocab_size, d_model, padding_idx=tokenizer.Q_PAD
-        ) 
-        self.emb_qb = nn.Embedding(
-            tokenizer.qubit_vocab_size, d_model, padding_idx=tokenizer.Q_PAD
-        )
+        self.emb_op = nn.Embedding(tokenizer.OP_VOCAB_SIZE, d_model, padding_idx=tokenizer.PAD)     # Gate embedding
+        self.emb_qa = nn.Embedding(tokenizer.qubit_vocab_size, d_model, padding_idx=tokenizer.Q_PAD)  # Qubit 1 embedding   
+        self.emb_qb = nn.Embedding(tokenizer.qubit_vocab_size, d_model, padding_idx=tokenizer.Q_PAD)  # Qubit 2 embedding
 
     def forward(self, ops: torch.Tensor, qa: torch.Tensor, qb: torch.Tensor):
         return self.emb_op(ops) + self.emb_qa(qa) + self.emb_qb(qb)
