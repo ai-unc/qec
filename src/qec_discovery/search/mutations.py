@@ -6,7 +6,7 @@ Each function returns a new list and leaves the circuit you passed in unchanged.
 
 import random
 
-from random_circuits import random_gate
+from .random_circuits import random_gate
 
 
 def replace_gate(circuit, n_qubits=7, rng=None):

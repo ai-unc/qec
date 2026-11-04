@@ -1,12 +1,12 @@
 # Pair 4: Clifford circuit search
 
-For a step-by-step visual walkthrough, read [Pair 4 explained visually](EXPLANATION.md),
+For a step-by-step visual walkthrough, read [the search walkthrough](search-explanation.md),
 with Mermaid flowcharts for generation, mutation, search, ranking, and integration.
 
 This package implements Pair 4's random Clifford sequence generator, bounded
 gate mutations, independent random search, and a mutation-only `(1+1)` search.
-It uses Python's standard library, requires Python 3.10+, and was tested with
-Python 3.12.3. Run commands from the repository root. No installation is needed.
+It uses Python's standard library and requires Python 3.10+. Run commands from the
+repository root after `pip install -e .` (or with `PYTHONPATH=src`).
 
 The included evaluator is **synthetic**. It measures similarity to a six-gate
 sequence, not error detection, code distance, or error correction. Real code
@@ -17,33 +17,33 @@ evaluation remains a dependency on the other project pairs.
 Generate two reproducible candidate encoders:
 
 ```bash
-python3 -m pair4 sample --n 5 --k 1 --seed 42 --count 2
+python3 -m qec_discovery.search sample --n 5 --k 1 --seed 42 --count 2
 ```
 
 Run either search with the explicitly selected demo evaluator:
 
 ```bash
-python3 -m pair4 search --method random --evaluator demo --seed 42 --budget 1000
-python3 -m pair4 search --method one_plus_one --evaluator demo --seed 42 --budget 1000
+python3 -m qec_discovery.search search --method random --evaluator demo --seed 42 --budget 1000
+python3 -m qec_discovery.search search --method one_plus_one --evaluator demo --seed 42 --budget 1000
 ```
 
 Compare both methods using 30 paired seeds (`0` through `29`) and 1,000 evaluator
 calls per method per seed:
 
 ```bash
-python3 -m pair4 benchmark --evaluator demo
+python3 -m qec_discovery.search benchmark --evaluator demo
 ```
 
 Use a separate pilot before a full comparison:
 
 ```bash
-python3 -m pair4 benchmark --evaluator demo --budget 100 --seeds 1000 1001
+python3 -m qec_discovery.search benchmark --evaluator demo --budget 100 --seeds 1000 1001
 ```
 
 Search and benchmark commands print the generated output directory under
-`pair4/runs/`. A benchmark also creates a standalone `report.html` with median
+`runs/` in the working directory. A benchmark also creates a standalone `report.html` with median
 best-so-far curves and interquartile bands. Generated outputs and Python caches
-are ignored by `pair4/.gitignore`.
+are ignored by `.gitignore`.
 
 Use `--output PATH` to choose a new directory (or a new JSON file for `sample`).
 Existing output locations are never overwritten. `--help` describes each command.
@@ -51,7 +51,7 @@ Existing output locations are never overwritten. `--help` describes each command
 Run the tests:
 
 ```bash
-python3 -m unittest discover -s pair4/tests -v
+PYTHONPATH=src python3 -m unittest discover -s tests/search -v
 ```
 
 ## How the algorithms work
@@ -124,7 +124,7 @@ the manifest records it, and every generated candidate is also saved.
 ## Python API
 
 ```python
-from pair4 import (
+from qec_discovery.search import (
     DemoEvaluator, SamplingConfig, SearchConfig,
     mutate_circuit, one_plus_one_search, random_stream, sample_random_circuit,
 )
@@ -144,14 +144,14 @@ print(result.best.candidate.to_dict())
 `random_search` has the same signature. Both accept an optional keyword-only
 `initial_candidate` for controlled experiments. `SearchResult` contains `best`,
 `archive`, `events`, `evaluation_count`, `status`, `error`, and elapsed timing.
-`pair4.export.write_run(result, directory)` creates the portable exports.
+`qec_discovery.search.export.write_run(result, directory)` creates the portable exports.
 
 ## External evaluator contract and ownership
 
 Pair 4 consumes an object satisfying this interface:
 
 ```python
-from pair4 import CircuitCandidate, EvaluationResult, ObjectiveSpec
+from qec_discovery.search import CircuitCandidate, EvaluationResult, ObjectiveSpec
 
 # An externally implemented evaluator exposes:
 # objective: ObjectiveSpec
@@ -193,8 +193,8 @@ Once collaborators provide a real factory, the invocation will look like this
 (`team_evaluator:make` is a placeholder, not an existing module):
 
 ```bash
-python3 -m pair4 benchmark --n 4 --k 2 --evaluator team_evaluator:make \
-  --evaluator-config pair4/examples/depolarizing.json
+python3 -m qec_discovery.search benchmark --n 4 --k 2 --evaluator team_evaluator:make \
+  --evaluator-config examples/depolarizing.json
 ```
 
 `examples/depolarizing.json` is the proposed experiment request. The external
@@ -286,8 +286,8 @@ optimization, and transformer-guided proposals are deferred.
 
 ## Research basis
 
-- [Perplexity research report](../perplexity_research.md)
-- [Gemini research report](../gemini_research.md)
+- [Perplexity research report](research/perplexity.md)
+- [Gemini research report](research/gemini.md)
 - [Tandeitnik and Guerreiro, *Evolving Quantum Circuits*, §II.2](https://arxiv.org/html/2210.05058v1#S2.SS2)
 - [Webster and Browne, *Engineering Quantum Error Correction Codes Using Evolutionary Algorithms*](https://arxiv.org/abs/2409.13017)
 - [Gottesman, *Stabilizer Codes and Quantum Error Correction*, Chapters 3–4](https://arxiv.org/html/quant-ph/9705052v1)

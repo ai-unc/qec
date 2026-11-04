@@ -1,4 +1,4 @@
-"""Run from the repository root with python3 -m pair4."""
+"""Run from the repository root with python3 -m qec_discovery.search."""
 
 import argparse
 from datetime import datetime, timezone
@@ -29,7 +29,7 @@ def _evaluator_arguments(parser: argparse.ArgumentParser) -> None:
 
 def _output_directory(command: str) -> Path:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    return Path(__file__).resolve().parent / "runs" / f"{command}-{stamp}-{uuid4().hex[:8]}"
+    return Path.cwd() / "runs" / f"{command}-{stamp}-{uuid4().hex[:8]}"
 
 
 def _reject_constant(value: str) -> None:

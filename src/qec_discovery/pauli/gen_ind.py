@@ -1,4 +1,4 @@
-from commutation_check import commutation_check
+from .commutation_check import commutation_check
 import numpy as np
 
 # input: (generated) set of stabilizer generators

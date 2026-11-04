@@ -1,6 +1,6 @@
-from enumerate_pauli import enumerate_pauli_errors
-from noise import error_probability
-from syndrome import calculate_syndrome
+from .enumerate_pauli import enumerate_pauli_errors
+from .models import error_probability
+from .syndrome import calculate_syndrome
 
 
 def build_lookup_table(stabilizers, noise_model, p):

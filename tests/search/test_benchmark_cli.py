@@ -6,10 +6,10 @@ import sys
 from tempfile import TemporaryDirectory
 import unittest
 
-from pair4.evolution_prototype import DemoEvaluator, ObjectiveSpec, SearchConfig
-from pair4.evolution_prototype.benchmark import run_benchmark, statistics
-from pair4.evolution_prototype.export import write_run
-from pair4.evolution_prototype.search import random_search
+from qec_discovery.search import DemoEvaluator, ObjectiveSpec, SearchConfig
+from qec_discovery.search.benchmark import run_benchmark, statistics
+from qec_discovery.search.export import write_run
+from qec_discovery.search.search import random_search
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -102,8 +102,11 @@ class BenchmarkTests(unittest.TestCase):
 
 class CLITests(unittest.TestCase):
     def cli(self, *arguments, env=None):
-        return subprocess.run([sys.executable, "-m", "pair4", *arguments], cwd=ROOT,
-                              text=True, capture_output=True, env=env, timeout=20)
+        base = dict(os.environ if env is None else env)
+        src = str(ROOT / "src")
+        base["PYTHONPATH"] = src + os.pathsep + base.get("PYTHONPATH", "")
+        return subprocess.run([sys.executable, "-m", "qec_discovery.search", *arguments], cwd=ROOT,
+                              text=True, capture_output=True, env=base, timeout=20)
 
     def test_sample_json_and_explicit_evaluator_requirement(self):
         result = self.cli("sample", "--n", "5", "--k", "1", "--count", "2", "--seed", "42")
@@ -143,7 +146,7 @@ class CLITests(unittest.TestCase):
     def test_external_factory_and_objective_configuration(self):
         with TemporaryDirectory() as temporary:
             provider = Path(temporary) / "test_pair4_provider.py"
-            provider.write_text('''from pair4 import EvaluationResult, ObjectiveSpec
+            provider.write_text('''from qec_discovery.search import EvaluationResult, ObjectiveSpec
 class External:
     def __init__(self, config):
         self.objective = ObjectiveSpec("test.external_length", "minimize", "1", config, is_synthetic=True)

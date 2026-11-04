@@ -6,7 +6,7 @@ the core code never needs it.
 
 import stim
 
-from pair2.pauli_gates import check_gate, parse_pauli
+from .pauli_gates import check_gate, parse_pauli
 
 # Stim calls the controlled-NOT gate "CX".
 STIM_NAMES = {"H": "H", "S": "S", "CNOT": "CX"}

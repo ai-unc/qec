@@ -2,7 +2,7 @@ from collections import Counter
 from random import Random
 import unittest
 
-from pair4.evolution_prototype import (CircuitCandidate, GateOp, SamplingConfig, SearchConfig,
+from qec_discovery.search import (CircuitCandidate, GateOp, SamplingConfig, SearchConfig,
                    mutate_circuit, random_stream, sample_random_circuit, sample_random_gate)
 
 

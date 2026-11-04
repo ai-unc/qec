@@ -676,7 +676,7 @@ Arrows show main use relationships, not an exhaustive import graph.
 | [benchmark.py](benchmark.py) | How are methods compared and reports generated? |
 | [export.py](export.py) | How are results written? |
 | [CLI module](__main__.py) | How are command-line arguments interpreted? |
-| [Package exports](__init__.py) | What can be imported directly from `pair4`? |
+| [Package exports](../src/qec_discovery/search/__init__.py) | What can be imported directly from `qec_discovery.search`? |
 | [README.md](README.md) | What is the compact usage and integration reference? |
 
 ## 17. Try it yourself
@@ -687,7 +687,7 @@ third-party dependencies.
 **Inspect generated gate lists:**
 
 ```bash
-python3 -m pair4 sample --n 4 --k 2 --seed 42 --count 2
+python3 -m qec_discovery.search sample --n 4 --k 2 --seed 42 --count 2
 ```
 
 This prints JSON; generation alone does not assess code quality.
@@ -695,7 +695,7 @@ This prints JSON; generation alone does not assess code quality.
 **Run evolutionary search with synthetic scores:**
 
 ```bash
-python3 -m pair4 search --method one_plus_one --evaluator demo --seed 42 --budget 100
+python3 -m qec_discovery.search search --method one_plus_one --evaluator demo --seed 42 --budget 100
 ```
 
 Read `summary.json` for the best candidate and `history.jsonl` for the decisions.
@@ -703,13 +703,13 @@ Read `summary.json` for the best candidate and `history.jsonl` for the decisions
 **Run the baseline with the same initial candidate:**
 
 ```bash
-python3 -m pair4 search --method random --evaluator demo --seed 42 --budget 100
+python3 -m qec_discovery.search search --method random --evaluator demo --seed 42 --budget 100
 ```
 
 **Generate a small visual comparison:**
 
 ```bash
-python3 -m pair4 benchmark --evaluator demo --budget 100 --seeds 1000 1001
+python3 -m qec_discovery.search benchmark --evaluator demo --budget 100 --seeds 1000 1001
 ```
 
 Open the printed `report.html` path in a browser. It contains synthetic labels,
@@ -718,16 +718,16 @@ primary-objective curves, IQR bands, and final-score and cost summaries.
 **Run the default 30-seed comparison:**
 
 ```bash
-python3 -m pair4 benchmark --evaluator demo
+python3 -m qec_discovery.search benchmark --evaluator demo
 ```
 
-Output directories are created under `pair4/runs/` and ignored by Git.
+Output directories are created under `runs/` in the working directory and ignored by Git.
 
 **Future real-evaluator invocation:**
 
 ```bash
-python3 -m pair4 benchmark --n 4 --k 2 --evaluator team_evaluator:make \
-  --evaluator-config pair4/examples/depolarizing.json
+python3 -m qec_discovery.search benchmark --n 4 --k 2 --evaluator team_evaluator:make \
+  --evaluator-config examples/depolarizing.json
 ```
 
 `team_evaluator:make` is a **placeholder**, usable only once the team supplies
@@ -751,7 +751,7 @@ The automated suite checks the machinery:
 | Reporting | Exports, paired starts, quartiles, complete-pair statistics |
 
 ```bash
-python3 -m unittest discover -s pair4/tests -v
+PYTHONPATH=src python3 -m unittest discover -s tests/search -v
 ```
 
 These checks do not establish quantum-code performance. Pending scientific
@@ -771,8 +771,8 @@ and transformer-guided proposals remain later extensions.
 ### Research references
 
 - [Original Pair 4 notes](../research.searchalgorithms.md)
-- [Perplexity research](../perplexity_research.md)
-- [Gemini research](../gemini_research.md)
+- [Perplexity research](research/perplexity.md)
+- [Gemini research](research/gemini.md)
 - [Gottesman: Stabilizer Codes and Quantum Error Correction](https://arxiv.org/html/quant-ph/9705052v1)
 - [Tandeitnik and Guerreiro: Evolving Quantum Circuits](https://arxiv.org/html/2210.05058v1)
 - [Webster and Browne: Engineering Quantum Error Correction Codes Using Evolutionary Algorithms](https://arxiv.org/abs/2409.13017)

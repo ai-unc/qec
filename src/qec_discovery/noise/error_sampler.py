@@ -1,6 +1,6 @@
 import jax.random as jr
 import jax.numpy as jnp
-from noise import model
+from .models import model
 
 OPTIONS = ['I', 'X', 'Y', 'Z']
 

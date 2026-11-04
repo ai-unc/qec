@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from pair4.evolution_prototype import (CircuitCandidate, DemoEvaluator, EvaluationResult, GateOp, MutationResult,
+from qec_discovery.search import (CircuitCandidate, DemoEvaluator, EvaluationResult, GateOp, MutationResult,
                    ObjectiveSpec, SamplingConfig, SearchConfig, one_plus_one_search, random_search)
 
 
@@ -38,7 +38,7 @@ class SearchTests(unittest.TestCase):
         worse = CircuitCandidate(2, 1)
         edits = [MutationResult(better, "replace", 0), MutationResult(worse, "delete", 0)]
         config = SearchConfig(SamplingConfig(2, 1, 2), 3)
-        with patch("pair4.search.mutate_circuit", side_effect=edits):
+        with patch("qec_discovery.search.search.mutate_circuit", side_effect=edits):
             result = one_plus_one_search(config, ScriptedEvaluator([5, 4, 6]), initial_candidate=initial)
         self.assertEqual([event.accepted for event in result.events], [True, True, False])
         self.assertEqual([event.parent_index for event in result.events], [None, 1, 2])
@@ -51,7 +51,7 @@ class SearchTests(unittest.TestCase):
             CircuitCandidate(2, 1, (GateOp("H", (0,)), GateOp("S", (1,)))),
             CircuitCandidate(2, 1, (GateOp("H", (0,)),)),
         ]
-        with patch("pair4.search.sample_random_circuit", side_effect=candidates):
+        with patch("qec_discovery.search.search.sample_random_circuit", side_effect=candidates):
             result = random_search(SearchConfig(SamplingConfig(2, 1, 3), 3), ScriptedEvaluator())
         self.assertEqual([item.candidate for item in result.archive], list(reversed(candidates)))
         self.assertEqual(result.best.candidate, candidates[-1])
@@ -59,7 +59,7 @@ class SearchTests(unittest.TestCase):
     def test_small_primary_improvements_are_not_rounded(self):
         initial = CircuitCandidate(2, 1)
         child = CircuitCandidate(2, 1, (GateOp("CNOT", (0, 1)),))
-        with patch("pair4.search.mutate_circuit", return_value=MutationResult(child, "insert", 0)):
+        with patch("qec_discovery.search.search.mutate_circuit", return_value=MutationResult(child, "insert", 0)):
             result = one_plus_one_search(SearchConfig(SamplingConfig(2, 1), 2),
                                         ScriptedEvaluator([1, 1 - 1e-13]), initial_candidate=initial)
         self.assertEqual(result.best.candidate, child)
@@ -69,7 +69,7 @@ class SearchTests(unittest.TestCase):
         child = CircuitCandidate(2, 1, (GateOp("H", (1,)),))
         decisions = []
         for seed in range(40):
-            with patch("pair4.search.mutate_circuit", return_value=MutationResult(child, "replace", 0)):
+            with patch("qec_discovery.search.search.mutate_circuit", return_value=MutationResult(child, "replace", 0)):
                 result = one_plus_one_search(SearchConfig(SamplingConfig(2, 1), 2, seed),
                                             ScriptedEvaluator(), initial_candidate=initial)
             decisions.append(result.events[-1].accepted)

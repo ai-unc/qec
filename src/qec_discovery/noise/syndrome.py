@@ -1,5 +1,5 @@
-from error_sampler import sample_pauli_error
-from noise import model, error_probability
+from .error_sampler import sample_pauli_error
+from .models import model, error_probability
 
 
 def calculate_syndrome(stabilizers, error_string):

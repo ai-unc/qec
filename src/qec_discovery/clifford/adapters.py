@@ -11,7 +11,7 @@ import operator
 
 import numpy as np
 
-from pair2.pauli_gates import GATE_ARITY, parse_pauli
+from .pauli_gates import GATE_ARITY, parse_pauli
 
 # Integer rows are [gate id, a, b]. D5 (CNOT operand order) is still open with Arsh, so the
 # order lives in this one constant: for CNOT, a is the control and b is the target.

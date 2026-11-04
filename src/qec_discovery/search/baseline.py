@@ -1,20 +1,16 @@
-"""Pair 4: random Clifford search for [[3,1]] stabilizer codes.
-Run from repository root: python pair4/search.py
+"""Random Clifford search for [[3,1]] stabilizer codes.
+
+Run from the repository root: python scripts/discover.py
 """
 import csv
 import random
-import sys
 from pathlib import Path
 from itertools import product
 
-ROOT = Path(__file__).resolve().parents[1]
-for folder in (ROOT / 'pair1', ROOT / 'pair2', ROOT / 'pair3'):
-    sys.path.insert(0, str(folder))
-
-from pauli_to_bin import pauli_to_bin
-from pauli_gates_stim import apply_circuit
-from noise import error_probability
-from syndrome import calculate_syndrome
+from qec_discovery.clifford.pauli_gates_stim import apply_circuit
+from qec_discovery.noise.models import error_probability
+from qec_discovery.noise.syndrome import calculate_syndrome
+from qec_discovery.pauli.pauli_to_bin import pauli_to_bin
 
 SEED = ['ZII', 'IZI']  # [[3,1]] seed, not the full |000> state
 TARGET = 0.00725
@@ -144,7 +140,10 @@ def main():
     print(f'Unique codes evaluated: {len(results)}')
     for result in results[:5]:
         print(f"{result['generators']} -> {result['error_rate']:.4%}")
-    with open(ROOT / 'pair4' / 'results.csv', 'w', newline='') as file:
+    out = Path.cwd() / "results" / "baseline.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Results: {out.resolve()}")
+    with open(out, "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(['rank', 'generators', 'logical_error_rate', 'circuit', 'trial'])
         for i, r in enumerate(results, 1):

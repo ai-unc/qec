@@ -7,8 +7,8 @@ logical operators. Strings are signed, qubit 0 on the left (D1, D2). Bad circuit
 ValueError (D12) so callers can score them 0.
 """
 
-from pair2.adapters import unpack
-from pair2.pauli_gates import apply_gate
+from .adapters import unpack
+from .pauli_gates import apply_gate
 
 
 def _single(n, qubit, letter):

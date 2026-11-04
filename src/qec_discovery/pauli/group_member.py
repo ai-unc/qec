@@ -1,5 +1,5 @@
-from pauli_to_bin import pauli_to_bin
-from gen_ind import gen_ind
+from .pauli_to_bin import pauli_to_bin
+from .gen_ind import gen_ind
 
 # input: error (Pauli string), stabilizer group (list of binary vectors)
 # returns: True if error belongs to the group, False otherwise
