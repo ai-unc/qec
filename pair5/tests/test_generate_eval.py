@@ -4,31 +4,29 @@ import torch
 
 from pair4.evolution_prototype import CircuitCandidate, GateOp
 
-from pair5.generate import generate_circuit
+from pair5.generate import generate_stabilizer_code
 from pair5.model import CliffordDecoderOnly
 from pair5.tokenizer import CliffordTokenizer
 
 
 class GenerateEvalTests(unittest.TestCase):
-    def test_generate_valid_candidate(self):
+    def test_generate_stabilizer_code(self):
         torch.manual_seed(0)
-        tokenizer = CliffordTokenizer(n_qubits=4, k_logical=2)
+        n, k = 4, 2
+        tokenizer = CliffordTokenizer(n_qubits=n, k_logical=k)
         model = CliffordDecoderOnly(tokenizer, d_model=64, num_heads=4, num_layers=1, d_ff=128)
-        candidate = generate_circuit(model, greedy=True)
+        stabilizers = generate_stabilizer_code(model, greedy=True)
 
-        self.assertIsInstance(candidate, CircuitCandidate)
-        self.assertEqual(candidate.n_qubits, 4)
-        self.assertEqual(candidate.k_logical, 2)
-        for gate in candidate.gates:
-            self.assertIsInstance(gate, GateOp)
-            if gate.op == "CNOT":
-                self.assertNotEqual(gate.qubits[0], gate.qubits[1])
+        self.assertEqual(len(stabilizers), n - k)
+        for pauli in stabilizers:
+            self.assertEqual(len(pauli), n)
+            self.assertTrue(all(c in "IX" for c in pauli))
 
     def test_forward_shapes(self):
         tokenizer = CliffordTokenizer(n_qubits=4, k_logical=2)
         model = CliffordDecoderOnly(tokenizer, d_model=64, num_heads=4, num_layers=1, d_ff=128)
         candidate = CircuitCandidate(
-            4, 2, (GateOp("H", (0,)), GateOp("CNOT", (0, 1)), GateOp("S", (1,)))
+            4, 2, (GateOp("CNOT", (0, 1)),)
         )
         encoded = tokenizer.encode(candidate)
         logits_op, logits_qa, logits_qb = model(

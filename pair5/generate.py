@@ -3,9 +3,8 @@ from __future__ import annotations
 import torch
 import torch.nn.functional as F
 
-from pair4.evolution_prototype import CircuitCandidate
-
 from .model import CliffordDecoderOnly
+from .stabilizers import candidate_to_stabilizers
 
 
 def _masked_sample(logits: torch.Tensor, allow: torch.Tensor, greedy: bool) -> int:
@@ -17,7 +16,13 @@ def _masked_sample(logits: torch.Tensor, allow: torch.Tensor, greedy: bool) -> i
 
 
 @torch.no_grad()
-def generate_circuit(model: CliffordDecoderOnly, *, max_gates: int | None = None, greedy: bool = True, device: torch.device | None = None) -> CircuitCandidate:
+def generate_stabilizer_code(
+    model: CliffordDecoderOnly,
+    *,
+    max_gates: int | None = None,
+    greedy: bool = True,
+    device: torch.device | None = None,
+) -> list[str]:
     tokenizer = model.tokenizer
     model.eval()
     if device is None:
@@ -34,18 +39,13 @@ def generate_circuit(model: CliffordDecoderOnly, *, max_gates: int | None = None
         qb_t = torch.tensor([qb], dtype=torch.long, device=device)
         logits_op, logits_qa, logits_qb = model(op_t, qa_t, qb_t)
 
-        next_op_logits = logits_op[0, -1]
-        next_qa_logits = logits_qa[0, -1]
-        next_qb_logits = logits_qb[0, -1]
-
+        # CNOT-only sampling keeps conjugated stabilizer-X Paulis in {I, X}.
         op_mask = torch.zeros(tokenizer.OP_VOCAB_SIZE, dtype=torch.bool, device=device)
-        op_mask[tokenizer.OP_H] = True
-        op_mask[tokenizer.OP_S] = True
         if tokenizer.n_qubits >= 2:
             op_mask[tokenizer.OP_CNOT] = True
         op_mask[tokenizer.EOS] = True
 
-        op_id = _masked_sample(next_op_logits, op_mask, greedy)
+        op_id = _masked_sample(logits_op[0, -1], op_mask, greedy)
         if op_id == tokenizer.EOS:
             ops.append(tokenizer.EOS)
             qa.append(tokenizer.Q_EOS)
@@ -53,9 +53,9 @@ def generate_circuit(model: CliffordDecoderOnly, *, max_gates: int | None = None
             break
 
         _, qa_mask, _ = tokenizer.validity_masks(op_id, device=device)
-        qa_id = _masked_sample(next_qa_logits, qa_mask, greedy)
+        qa_id = _masked_sample(logits_qa[0, -1], qa_mask, greedy)
         qb_mask = tokenizer.qb_mask_for_qa(op_id, qa_id, device=device)
-        qb_id = _masked_sample(next_qb_logits, qb_mask, greedy)
+        qb_id = _masked_sample(logits_qb[0, -1], qb_mask, greedy)
 
         ops.append(op_id)
         qa.append(qa_id)
@@ -65,4 +65,4 @@ def generate_circuit(model: CliffordDecoderOnly, *, max_gates: int | None = None
         qa.append(tokenizer.Q_EOS)
         qb.append(tokenizer.Q_EOS)
 
-    return tokenizer.decode(ops, qa, qb)
+    return candidate_to_stabilizers(tokenizer.decode(ops, qa, qb))

@@ -1,13 +1,13 @@
-# Decoder-only Transformer to generate Clifford gate sequences
+# Decoder-only Transformer that generates stabilizer codes
 
-from .export import candidate_to_pair2_circuit
-from .generate import generate_circuit
+from .generate import generate_stabilizer_code
 from .model import CliffordDecoderOnly
+from .stabilizers import candidate_to_stabilizers
 from .tokenizer import CliffordTokenizer
 
 __all__ = [
     "CliffordDecoderOnly",
     "CliffordTokenizer",
-    "candidate_to_pair2_circuit",
-    "generate_circuit",
+    "candidate_to_stabilizers",
+    "generate_stabilizer_code",
 ]
