@@ -6,7 +6,6 @@ import torch.nn as nn
 from .MHA_Transformer import CausalDecoderLayer, PositionalEncoding
 from .tokenizer import CliffordTokenizer
 
-
 class FactoredGateEmbedding(nn.Module):
     def __init__(self, tokenizer: CliffordTokenizer, d_model: int):
         super().__init__()

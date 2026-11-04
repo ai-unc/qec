@@ -6,7 +6,6 @@ import torch.nn.functional as F
 from pair4.evolution_prototype import CircuitCandidate
 
 from .model import CliffordDecoderOnly
-from .tokenizer import CliffordTokenizer
 
 
 def _masked_sample(logits: torch.Tensor, allow: torch.Tensor, greedy: bool) -> int:
