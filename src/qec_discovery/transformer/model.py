@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from .MHA_Transformer import CausalDecoderLayer, PositionalEncoding
+from .transformer import CausalDecoderLayer, PositionalEncoding
 from .tokenizer import CliffordTokenizer
 
 class FactoredGateEmbedding(nn.Module):
