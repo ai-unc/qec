@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
 
-import torch
+import numpy as np
 
 from qec_discovery.search.models import CircuitCandidate, GateOp
 
 
 @dataclass(frozen=True)
 class EncodedCircuit:
-    ops: torch.Tensor
-    qa: torch.Tensor
-    qb: torch.Tensor
+    ops: np.ndarray
+    qa: np.ndarray
+    qb: np.ndarray
 
 
 class CliffordTokenizer:
@@ -22,12 +21,12 @@ class CliffordTokenizer:
     EOS = 2
 
     # Gate tokens
-    OP_H = 3 # Hadamard gate
-    OP_S = 4 # Phase gate
-    OP_CNOT = 5 # CNOT gate
+    OP_H = 3  # Hadamard gate
+    OP_S = 4  # Phase gate
+    OP_CNOT = 5  # CNOT gate
     OP_VOCAB_SIZE = 6
 
-    # Qubit ids: 0=PAD, 1=BOS, 2=EOS, 3=UNUSED, then qubits start at 4, so qubit 1 is 4, qubit 2 is 5, etc
+    # Qubit ids: 0=PAD, 1=BOS, 2=EOS, 3=UNUSED, then qubits start at 4
     Q_PAD = 0
     Q_BOS = 1
     Q_EOS = 2
@@ -37,20 +36,20 @@ class CliffordTokenizer:
     OP_TO_ID = {"H": OP_H, "S": OP_S, "CNOT": OP_CNOT}
     ID_TO_OP = {OP_H: "H", OP_S: "S", OP_CNOT: "CNOT"}
 
-    def __init__(self, n_qubits = 4, k_logical = 2):
+    def __init__(self, n_qubits=4, k_logical=2):
         self.n_qubits = n_qubits
         self.k_logical = k_logical
-        self.max_gates = 8 * n_qubits # Max gates is 8 * n_qubits bc each gate is 8 tokens
-        self.max_seq_length = self.max_gates + 2 # Sequence length includes BOS + gates + EOS
+        self.max_gates = 8 * n_qubits
+        self.max_seq_length = self.max_gates + 2  # BOS + gates + EOS
         self.qubit_vocab_size = self.Q_OFFSET + n_qubits
 
     def qubit_id(self, qubit: int):
-        return self.Q_OFFSET + qubit # Qubit id is Q_OFFSET + qubit
+        return self.Q_OFFSET + qubit
 
     def qubit_from_id(self, token):
-        if token == self.Q_UNUSED: # If token is unused
+        if token == self.Q_UNUSED:
             return None
-        if self.Q_OFFSET <= token < self.qubit_vocab_size: # If token is in the qubit vocab
+        if self.Q_OFFSET <= token < self.qubit_vocab_size:
             return token - self.Q_OFFSET
         return None
 
@@ -96,9 +95,13 @@ class CliffordTokenizer:
         ops.append(self.EOS)
         qa.append(self.Q_EOS)
         qb.append(self.Q_EOS)
-        return EncodedCircuit(ops=torch.tensor(ops, dtype=torch.long), qa=torch.tensor(qa, dtype=torch.long), qb=torch.tensor(qb, dtype=torch.long))
+        return EncodedCircuit(
+            ops=np.asarray(ops, dtype=np.int32),
+            qa=np.asarray(qa, dtype=np.int32),
+            qb=np.asarray(qb, dtype=np.int32),
+        )
 
-    def decode(self, ops, qa, qb, n_qubits = None, k_logical = None):
+    def decode(self, ops, qa, qb, n_qubits=None, k_logical=None):
         op_list = [int(x) for x in ops]
         qa_list = [int(x) for x in qa]
         qb_list = [int(x) for x in qb]
@@ -123,16 +126,17 @@ class CliffordTokenizer:
             tuple(gates),
         )
 
-    def validity_masks(self, op_id: int, device: torch.device | None = None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]: # Checks the legal tokens for the next token given the chosen op
-        op_mask = torch.zeros(self.OP_VOCAB_SIZE, dtype=torch.bool, device=device)
+    def validity_masks(self, op_id: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Legal tokens for the next step given the chosen op."""
+        op_mask = np.zeros(self.OP_VOCAB_SIZE, dtype=bool)
         op_mask[self.OP_H] = True
         op_mask[self.OP_S] = True
         if self.n_qubits >= 2:
             op_mask[self.OP_CNOT] = True
         op_mask[self.EOS] = True
 
-        qa_mask = torch.zeros(self.qubit_vocab_size, dtype=torch.bool, device=device)
-        qb_mask = torch.zeros(self.qubit_vocab_size, dtype=torch.bool, device=device)
+        qa_mask = np.zeros(self.qubit_vocab_size, dtype=bool)
+        qb_mask = np.zeros(self.qubit_vocab_size, dtype=bool)
 
         if op_id == self.EOS:
             qa_mask[self.Q_EOS] = True
@@ -147,15 +151,12 @@ class CliffordTokenizer:
         elif op_id == self.OP_CNOT:
             for q in range(self.n_qubits):
                 qb_mask[self.qubit_id(q)] = True
-        else:
-            # Unknown / special: allow nothing on qubits (caller should not sample).
-            pass
+        # Unknown / special: allow nothing on qubits (caller should not sample).
 
         return op_mask, qa_mask, qb_mask
 
-    def qb_mask_for_qa(self, op_id: int, qa_id: int, device: torch.device | None = None) -> torch.Tensor:
-        _, _, qb_mask = self.validity_masks(op_id, device=device)
+    def qb_mask_for_qa(self, op_id: int, qa_id: int) -> np.ndarray:
+        _, _, qb_mask = self.validity_masks(op_id)  # freshly allocated, safe to mutate
         if op_id == self.OP_CNOT and self.Q_OFFSET <= qa_id < self.qubit_vocab_size:
-            qb_mask = qb_mask.clone()
             qb_mask[qa_id] = False
         return qb_mask
