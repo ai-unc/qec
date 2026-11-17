@@ -8,8 +8,6 @@ from .tokenizer import CliffordTokenizer
 
 
 class PaddedEmbed(nn.Module):
-    """nn.Embed with PyTorch-style padding_idx: the pad token embeds to zeros
-    and receives no gradient."""
     num_embeddings: int
     features: int
     padding_idx: int

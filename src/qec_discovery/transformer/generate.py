@@ -13,12 +13,15 @@ def _masked_sample(
     allow: jnp.ndarray,
     greedy: bool,
     key: jax.Array | None,
+    *,
+    temperature: float = 1.0,
 ) -> int:
     masked = jnp.where(allow, logits, -jnp.inf)
     if greedy:
         return int(jnp.argmax(masked))
+    temp = max(float(temperature), 1e-6)
     # categorical takes logits directly, so no explicit softmax is needed
-    return int(jax.random.categorical(key, masked))
+    return int(jax.random.categorical(key, masked / temp))
 
 
 def generate_stabilizer_code(
@@ -27,10 +30,13 @@ def generate_stabilizer_code(
     *,
     key: jax.Array | None = None,
     max_gates: int | None = None,
+    min_gates: int = 0,
     greedy: bool = True,
+    temperature: float = 1.0,
 ) -> list[str]:
     tokenizer = model.tokenizer
     max_gates = tokenizer.max_gates if max_gates is None else max_gates
+    min_gates = max(0, min(int(min_gates), max_gates))
 
     if not greedy and key is None:
         raise ValueError("A PRNG `key` is required when greedy=False.")
@@ -38,6 +44,7 @@ def generate_stabilizer_code(
     ops = [tokenizer.BOS]
     qa = [tokenizer.Q_BOS]
     qb = [tokenizer.Q_BOS]
+    n_gates = 0
 
     def next_key():
         nonlocal key
@@ -56,10 +63,14 @@ def generate_stabilizer_code(
         op_mask = np.zeros(tokenizer.OP_VOCAB_SIZE, dtype=bool)
         if tokenizer.n_qubits >= 2:
             op_mask[tokenizer.OP_CNOT] = True
-        op_mask[tokenizer.EOS] = True
+        # Untrained models put most mass on EOS; delay it until min_gates.
+        if n_gates >= min_gates:
+            op_mask[tokenizer.EOS] = True
         op_mask = jnp.asarray(op_mask)
 
-        op_id = _masked_sample(logits_op[0, -1], op_mask, greedy, next_key())
+        op_id = _masked_sample(
+            logits_op[0, -1], op_mask, greedy, next_key(), temperature=temperature
+        )
         if op_id == tokenizer.EOS:
             ops.append(tokenizer.EOS)
             qa.append(tokenizer.Q_EOS)
@@ -67,13 +78,26 @@ def generate_stabilizer_code(
             break
 
         _, qa_mask, _ = tokenizer.validity_masks(op_id)
-        qa_id = _masked_sample(logits_qa[0, -1], jnp.asarray(qa_mask), greedy, next_key())
+        qa_id = _masked_sample(
+            logits_qa[0, -1],
+            jnp.asarray(qa_mask),
+            greedy,
+            next_key(),
+            temperature=temperature,
+        )
         qb_mask = tokenizer.qb_mask_for_qa(op_id, qa_id)
-        qb_id = _masked_sample(logits_qb[0, -1], jnp.asarray(qb_mask), greedy, next_key())
+        qb_id = _masked_sample(
+            logits_qb[0, -1],
+            jnp.asarray(qb_mask),
+            greedy,
+            next_key(),
+            temperature=temperature,
+        )
 
         ops.append(op_id)
         qa.append(qa_id)
         qb.append(qb_id)
+        n_gates += 1
     else:
         ops.append(tokenizer.EOS)
         qa.append(tokenizer.Q_EOS)
