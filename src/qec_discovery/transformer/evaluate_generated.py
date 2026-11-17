@@ -14,7 +14,6 @@ from .tokenizer import CliffordTokenizer
 
 
 def _init_params(model: CliffordDecoderOnly, key: jax.Array):
-    """Initialize Flax params with a one-token BOS batch."""
     tok = model.tokenizer
     ops = jnp.asarray([[tok.BOS]], dtype=jnp.int32)
     qa = jnp.asarray([[tok.Q_BOS]], dtype=jnp.int32)
