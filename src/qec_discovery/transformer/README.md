@@ -9,8 +9,8 @@ From the `qec/` directory:
 ```bash
 pip install -e ".[model,train,stim,dev]"
 
-# Generate + evaluate (default: sample; use --greedy for argmax)
-PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 0
+# Generate and evaluate
+PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated
 PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 1
 PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 0 --greedy
 

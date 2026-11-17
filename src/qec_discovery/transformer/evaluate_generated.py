@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import secrets
 
 import jax
 import jax.numpy as jnp
@@ -24,11 +25,14 @@ def _init_params(model: CliffordDecoderOnly, key: jax.Array):
 def run_demo(
     n_qubits: int = 4,
     k_logical: int = 2,
-    seed: int = 0,
+    seed: int | None = None,
     *,
     greedy: bool = False,
     min_gates: int = 4,
 ):
+    if seed is None:
+        seed = secrets.randbits(31)
+    print(f"seed: {seed}")
     key = jax.random.PRNGKey(seed)
     key_init, key_gen = jax.random.split(key)
     tokenizer = CliffordTokenizer(n_qubits=n_qubits, k_logical=k_logical)
@@ -58,7 +62,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--n", type=int, default=4)
     parser.add_argument("--k", type=int, default=2)
-    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="PRNG seed (default: random; printed as seed: ...).",
+    )
     parser.add_argument(
         "--greedy",
         action="store_true",
