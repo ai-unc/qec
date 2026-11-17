@@ -1,32 +1,24 @@
 # Transformer (Pair 5)
 
 JAX/Flax decoder-only model that currently generates Clifford gate sequences and
-derives unsigned stabilizer Paulis. Install extras:
+derives unsigned stabilizer Paulis. Scores them with
+`evaluate_candidate_generators`. Actual Pauli-token training needs the stabilizer tokenizer — see [`training_pipeline.md`](training_pipeline.md).
+
+From the `qec/` directory:
 
 ```bash
 pip install -e ".[model,train,stim,dev]"
-```
 
-## Demo
-
-From the repo root (with `src` on `PYTHONPATH`):
-
-```bash
+# Generate + evaluate (default: sample; use --greedy for argmax)
 PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 0
 PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 1
 PYTHONPATH=src python3 -m qec_discovery.transformer.evaluate_generated --seed 0 --greedy
+
+# JAX/Optax sandbox (synthetic MLP — not the transformer)
+PYTHONPATH=src python3 -m qec_discovery.transformer.training
+
+# Package tests
+PYTHONPATH=src python3 -m unittest discover -s src/qec_discovery/transformer/tests -v
 ```
 
-Flags: `--n`, `--k`, `--seed`, `--greedy`, `--min-gates`, `--temperature`.
-
-Default decoding **samples** and blocks EOS until `--min-gates` CNOTs (default 4),
-so different `--seed` values produce different circuits on an untrained model.
-`--greedy` uses argmax (often empty / identical). Then prints validity and
-logical error rate via `evaluate_candidate_generators`.
-
-## Eval bridge and training notes
-
-- Score candidate generators with `evaluate_candidate_generators` (see
-  `pipeline_interface.py`).
-- Planned direct Pauli-string generation and how it plugs into discovery eval:
-  [`training_pipeline.md`](training_pipeline.md).
+Flags for the demo: `--n`, `--k`, `--seed`, `--greedy`, `--min-gates`.

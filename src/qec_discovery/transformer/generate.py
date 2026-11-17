@@ -13,15 +13,12 @@ def _masked_sample(
     allow: jnp.ndarray,
     greedy: bool,
     key: jax.Array | None,
-    *,
-    temperature: float = 1.0,
 ) -> int:
     masked = jnp.where(allow, logits, -jnp.inf)
     if greedy:
         return int(jnp.argmax(masked))
-    temp = max(float(temperature), 1e-6)
     # categorical takes logits directly, so no explicit softmax is needed
-    return int(jax.random.categorical(key, masked / temp))
+    return int(jax.random.categorical(key, masked))
 
 
 def generate_stabilizer_code(
@@ -32,7 +29,6 @@ def generate_stabilizer_code(
     max_gates: int | None = None,
     min_gates: int = 0,
     greedy: bool = True,
-    temperature: float = 1.0,
 ) -> list[str]:
     tokenizer = model.tokenizer
     max_gates = tokenizer.max_gates if max_gates is None else max_gates
@@ -68,9 +64,7 @@ def generate_stabilizer_code(
             op_mask[tokenizer.EOS] = True
         op_mask = jnp.asarray(op_mask)
 
-        op_id = _masked_sample(
-            logits_op[0, -1], op_mask, greedy, next_key(), temperature=temperature
-        )
+        op_id = _masked_sample(logits_op[0, -1], op_mask, greedy, next_key())
         if op_id == tokenizer.EOS:
             ops.append(tokenizer.EOS)
             qa.append(tokenizer.Q_EOS)
@@ -79,19 +73,11 @@ def generate_stabilizer_code(
 
         _, qa_mask, _ = tokenizer.validity_masks(op_id)
         qa_id = _masked_sample(
-            logits_qa[0, -1],
-            jnp.asarray(qa_mask),
-            greedy,
-            next_key(),
-            temperature=temperature,
+            logits_qa[0, -1], jnp.asarray(qa_mask), greedy, next_key()
         )
         qb_mask = tokenizer.qb_mask_for_qa(op_id, qa_id)
         qb_id = _masked_sample(
-            logits_qb[0, -1],
-            jnp.asarray(qb_mask),
-            greedy,
-            next_key(),
-            temperature=temperature,
+            logits_qb[0, -1], jnp.asarray(qb_mask), greedy, next_key()
         )
 
         ops.append(op_id)
